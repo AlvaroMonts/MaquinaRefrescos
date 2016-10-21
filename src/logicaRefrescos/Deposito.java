@@ -3,7 +3,7 @@ package logicaRefrescos;
 /*
  * Clase Deposito
  * Existira un objeto de esta clase por cada tipo de moneda
- * (1, 2, 5, 10, 20 y 50 centimos y 1 y 2 �)
+ * (1, 2, 5, 10, 20 y 50 centimos y 1 y 2 euros)
  */
 public class Deposito {
 	
@@ -18,15 +18,15 @@ public class Deposito {
 	private int cantidad;
 	
 	/*
-	 * Constructor vacío (para Hibernate)
+	 * Constructor vacio (para Hibernate)
 	 */
 	
 	public Deposito(){}
 	
 	/*
 	 * Constructor
-	 * @param v - valor de la moneda en cuesti�n
-	 * @param inicial - cantidad de monedas de este tipo con las que se inicia la ejecuci�n de la m�quina de refrescos
+	 * @param v - valor de la moneda en cuestion
+	 * @param inicial - cantidad de monedas de este tipo con las que se inicia la ejecucion de la maquina de refrescos
 	 */
 	public Deposito(String n, int v, int inicial){
 		id = v;
@@ -37,7 +37,7 @@ public class Deposito {
 	
 	/*
 	 * Aumenta la cantidad de monedas
-	 * Se llamar� a este m�todo cuando el usuario inserte una moneda
+	 * Se llamara a este metodo cuando el usuario inserte una moneda
 	 */
 	public void anadir(){
 		cantidad++;
@@ -45,8 +45,8 @@ public class Deposito {
 
 	/*
 	 * Disminuye la cantidad de monedas
-	 * Se llamar� a este m�todo cuando se retornen monedas al usuario 
-	 * (bien cuando pulse el bot�n de retorno, bien cuando haya que devolver cambio)
+	 * Se llamara a este metodo cuando se retornen monedas al usuario 
+	 * (bien cuando pulse el botin de retorno, bien cuando haya que devolver cambio)
 	 */
 	public void restar(){
 		cantidad--;
