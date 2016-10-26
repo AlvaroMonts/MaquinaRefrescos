@@ -106,7 +106,6 @@ public class Deposito {
 
 	/*
 	 * toString para comprobar el estado del deposito
-	 * 
 	 * @return retorna un string con los datos del deposito
 	 */
 	public String toString() {

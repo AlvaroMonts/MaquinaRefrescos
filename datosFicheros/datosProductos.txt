@@ -1,8 +1,6 @@
-1,60,10,coca cola
-2,60,10,fanta naranja
-3,60,10,fanta limon
-4,100,10,sandwich chorizo
-5,100,15,sandwich atun
-6,150,10,bocadillo de jamon
-7,100,10,kikos
-8,40,10,chocolate
+1,10,60,coca cola
+2,10,60,fanta naranja
+3,10,60,fanta limon
+4,10,100,sandwich chorizo
+5,10,100,sandwich atun
+6,10,150,bocadillo de jamon
