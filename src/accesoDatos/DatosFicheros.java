@@ -17,6 +17,7 @@ public class DatosFicheros implements Datos {
 			"C:/Users/alvaro.montes/git/adat-ud1-a03-maquina-refrescos-ficheros-AlvaroMonts/datosFicheros/datosMonedas.txt");
 	private File archivoProductos = new File(
 			"C:/Users/alvaro.montes/git/adat-ud1-a03-maquina-refrescos-ficheros-AlvaroMonts/datosFicheros/datosProductos.txt");
+
 	private HashMap<Integer, Deposito> datosMonedas = new HashMap<Integer, Deposito>(); // depositos
 	private HashMap<String, Dispensador> datosProductos = new HashMap<String, Dispensador>(); // dispensadores
 
@@ -30,7 +31,7 @@ public class DatosFicheros implements Datos {
 			String linea = new String();
 			for (int j = 0; (linea = br.readLine()) != null; j++) {
 				String sar[] = linea.split(",");
-				Deposito dep = new Deposito(sar[2], Integer.parseInt(sar[0]), Integer.parseInt(sar[1]));
+				Deposito dep = new Deposito(sar[0], Integer.parseInt(sar[1]), Integer.parseInt(sar[2]));
 				datosMonedas.put(j, dep);
 			}
 
@@ -42,8 +43,10 @@ public class DatosFicheros implements Datos {
 			br.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("El fichero no ha sido encontrado");
+			e.printStackTrace();
 		} catch (NumberFormatException e) {
 			System.out.println("Hay depositos que no estan creados correctamente");
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -72,8 +75,10 @@ public class DatosFicheros implements Datos {
 			br.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("El fichero no ha sido encontrado");
+			e.printStackTrace();
 		} catch (NumberFormatException e) {
 			System.out.println("Hay dispensadores que no estan creados correctamente");
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -88,35 +93,24 @@ public class DatosFicheros implements Datos {
 			fw = new FileWriter(archivoMonedas);
 			bw = new BufferedWriter(fw);
 
-			/*
-			 * for (int i = 0; i < datosMonedas.size(); i++) {
-			 * bw.write(datosMonedas.get(i).getId() + "," +
-			 * datosMonedas.get(i).getValor() + "," +
-			 * datosMonedas.get(i).getCantidad() + "," +
-			 * datosMonedas.get(i).getNombreMoneda()); bw.newLine(); }
-			 */
-
 			for (int i = 0; i < depositos.size(); i++) {
-				bw.write(datosMonedas.get(i).getValor() + "," + datosMonedas.get(i).getCantidad() + ","
-						+ datosMonedas.get(i).getNombreMoneda());
+				bw.write(datosMonedas.get(i).getNombreMoneda() + "," + datosMonedas.get(i).getValor() + ","
+						+ datosMonedas.get(i).getCantidad());
 				bw.newLine();
 			}
-
 			bw.close();
 			return true;
 		} catch (FileNotFoundException e) {
 			System.out.println("El fichero no ha sido encontrado");
+			e.printStackTrace();
 			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
-
 	}
 
 	public boolean guardarDispensadores(HashMap<String, Dispensador> dispensadores) {
-		obtenerDispensadores(); // para actualizar el hashmap datos
-								// dispensadores
 		datosProductos = dispensadores;
 		FileWriter fw;
 		BufferedWriter bw;
@@ -124,19 +118,11 @@ public class DatosFicheros implements Datos {
 			fw = new FileWriter(archivoProductos);
 			bw = new BufferedWriter(fw);
 			// String clave, String nombre, int precio, int inicial
-			// clave , precio , uds , nombre
+			// clave0, uds3, precio2, nombre1
 
-			/*
-			 * for (int i = 0; i < datosProductos.size(); i++) {
-			 * bw.write(datosProductos.get(i).getClave() + "," +
-			 * datosProductos.get(i).getPrecio() + "," +
-			 * datosProductos.get(i).getCantidad() + "," +
-			 * datosProductos.get(i).getNombreProducto()); bw.newLine(); }
-			 */
-
-			for (int i = 0; i < dispensadores.size(); i++) {
-				bw.write(datosProductos.get(i).getClave() + "," + datosProductos.get(i).getPrecio() + ","
-						+ datosProductos.get(i).getCantidad() + "," + datosProductos.get(i).getNombreProducto());
+			for (String clv : dispensadores.keySet()) {
+				bw.write(dispensadores.get(clv).getClave() + "," + dispensadores.get(clv).getCantidad() + ","
+						+ dispensadores.get(clv).getPrecio() + "," + dispensadores.get(clv).getNombreProducto());
 				bw.newLine();
 			}
 
@@ -144,6 +130,7 @@ public class DatosFicheros implements Datos {
 			return true;
 		} catch (FileNotFoundException e) {
 			System.out.println("El fichero no ha sido encontrado");
+			e.printStackTrace();
 			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
