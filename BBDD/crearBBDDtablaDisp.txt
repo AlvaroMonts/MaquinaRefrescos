@@ -18,28 +18,30 @@ USE `bbddmaquinarefrescos`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `depositos`
+-- Table structure for table `dispensadores`
 --
 
-DROP TABLE IF EXISTS `depositos`;
+DROP TABLE IF EXISTS `dispensadores`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `depositos` (
-  `valor` varchar(45) NOT NULL,
-  `cantidad` varchar(45) NOT NULL,
+CREATE TABLE `dispensadores` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `clave` varchar(45) NOT NULL,
   `nombre` varchar(45) NOT NULL,
-  PRIMARY KEY (`valor`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `cantidad` int(11) NOT NULL,
+  `precio` int(11) NOT NULL,
+  PRIMARY KEY (`id`,`clave`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `depositos`
+-- Dumping data for table `dispensadores`
 --
 
-LOCK TABLES `depositos` WRITE;
-/*!40000 ALTER TABLE `depositos` DISABLE KEYS */;
-INSERT INTO `depositos` VALUES ('10','2501','10 centimos'),('100','1515','1 euro'),('20','3503','20 centimos'),('200','2024','2 euros'),('5','1012','5 centimos'),('50','3008','50 centimos');
-/*!40000 ALTER TABLE `depositos` ENABLE KEYS */;
+LOCK TABLES `dispensadores` WRITE;
+/*!40000 ALTER TABLE `dispensadores` DISABLE KEYS */;
+INSERT INTO `dispensadores` VALUES (1,'coca','coca cola',9,60),(2,'fantan','fanta naranja',10,60),(3,'rdbl','redbull',8,150),(4,'mnstr','monster',8,150);
+/*!40000 ALTER TABLE `dispensadores` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-28 10:47:50
+-- Dump completed on 2016-10-28 10:47:51

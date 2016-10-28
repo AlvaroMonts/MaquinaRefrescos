@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import logicaRefrescos.Deposito;
 import logicaRefrescos.Dispensador;
@@ -55,21 +57,23 @@ public class DatosBBDD implements Datos {
 	}
 
 	public HashMap<Integer, Deposito> obtenerDepositos() {
-
 		try {
-			String texto = new String();
-			String texto2 = new String();
-			String texto3 = new String();
-			String sql = "INSERT INTO `bbddmaquinarefrescos`.`depositos` (`valor`, `cantidad`, `nombre`) VALUES (?,?,?);";
-			PreparedStatement stmt = (PreparedStatement) conection.prepareStatement(sql);
-			stmt.setString(1, texto);
-			stmt.setString(1, texto2);
-			stmt.setString(1, texto3);
-			
-			stmt.executeUpdate();
-			
-			
-			
+			String sql = "SELECT * from bbddmaquinarefrescos.depositos;";
+			Statement stmt = conection.createStatement();
+			ResultSet rset = stmt.executeQuery(sql);
+			rset.last();
+			int b = rset.getRow();
+			rset.beforeFirst();
+			for (int i = 0; i <= b; i++) {
+				if (rset.next()) {
+					Deposito dep = new Deposito();
+					dep.setValor(rset.getInt((1)));
+					dep.setCantidad(rset.getInt((2)));
+					dep.setNombreMoneda(rset.getString((3)));
+					datosMonedas.put(i, dep);
+				}
+			}
+			rset.close();
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -78,14 +82,90 @@ public class DatosBBDD implements Datos {
 	}
 
 	public HashMap<String, Dispensador> obtenerDispensadores() {
-		return null;
+		try {
+			String sql = "SELECT * from bbddmaquinarefrescos.dispensadores;";
+			Statement stmt = conection.createStatement();
+			ResultSet rset = stmt.executeQuery(sql);
+			rset.last();
+			int b = rset.getRow();
+			rset.beforeFirst();
+			for (int i = 0; i <= b; i++) {
+				if (rset.next()) {
+					Dispensador disp = new Dispensador();
+					disp.setClave(rset.getString((2)));
+					disp.setNombreProducto(rset.getString((3)));
+					disp.setCantidad(rset.getInt((4)));
+					disp.setPrecio(rset.getInt((5)));
+					datosProductos.put(rset.getString((1)), disp);
+				}
+			}
+			rset.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return datosProductos;
 	}
 
 	public boolean guardarDepositos(HashMap<Integer, Deposito> depositos) {
-		return false;
+		try {
+			ArrayList<Integer> cantidad = new ArrayList<Integer>();
+			int valor[] = new int[6];
+			valor[0] = 200;
+			valor[1] = 100;
+			valor[2] = 50;
+			valor[3] = 20;
+			valor[4] = 10;
+			valor[5] = 5;
+
+			for (int i : depositos.keySet()) {
+				Deposito dep = new Deposito();
+				dep = depositos.get(i);
+				cantidad.add(dep.getCantidad());
+			}
+			for (int i = 0; i < valor.length; i++) {
+				String sql = "UPDATE `bbddmaquinarefrescos`.`depositos` SET cantidad = " + cantidad.get(i)
+						+ " WHERE valor = " + valor[i] + ";";
+System.out.println(valor[i]);
+				PreparedStatement stmt = conection.prepareStatement(sql);
+				stmt.executeUpdate();
+				stmt.close();
+			}
+
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public boolean guardarDispensadores(HashMap<String, Dispensador> dispensadores) {
-		return false;
+		try {
+			ArrayList<Integer> cantidad = new ArrayList<Integer>();
+			String clave[] = new String[dispensadores.size()];
+			int j=0;
+			for (String i : dispensadores.keySet()) {
+				Dispensador disp = new Dispensador();
+				disp = dispensadores.get(i);
+				clave[j] = disp.getClave();
+				cantidad.add(disp.getCantidad());
+				j++;
+			}
+
+			for (int i = 0; i < clave.length; i++) {
+				String sql = "UPDATE `bbddmaquinarefrescos`.`dispensadores` SET cantidad = " + cantidad.get(i)
+						+ " WHERE clave = '" + clave[i] + "';";
+				System.out.println(clave[i]);
+				PreparedStatement stmt = conection.prepareStatement(sql);
+				stmt.executeUpdate();
+				stmt.close();
+			}
+
+			return true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }
