@@ -32,7 +32,7 @@ public class DatosFicheros implements Datos {
 			for (int j = 0; (linea = br.readLine()) != null; j++) {
 				String sar[] = linea.split(",");
 				Deposito dep = new Deposito(sar[0], Integer.parseInt(sar[1]), Integer.parseInt(sar[2]));
-				datosMonedas.put(j, dep);
+				datosMonedas.put(Integer.parseInt(sar[1]), dep);
 			}
 
 			/*
@@ -107,6 +107,9 @@ public class DatosFicheros implements Datos {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
+		}catch (Exception e) {
+			System.out.println("error");
+			return false;
 		}
 	}
 
@@ -134,6 +137,9 @@ public class DatosFicheros implements Datos {
 			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
+		} catch (Exception e) {
+			System.out.println("error");
 			return false;
 		}
 	}

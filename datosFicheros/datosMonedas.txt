@@ -1,6 +1,0 @@
-2 euros,200,1000
-1 euro,100,1200
-50 centimos,50,1500
-20 centimos,20,2000
-10 centimos,10,3000
-5 centimos,5,5000

@@ -123,10 +123,10 @@ public class DatosBBDD implements Datos {
 				dep = depositos.get(i);
 				cantidad.add(dep.getCantidad());
 			}
+			
 			for (int i = 0; i < valor.length; i++) {
 				String sql = "UPDATE `bbddmaquinarefrescos`.`depositos` SET cantidad = " + cantidad.get(i)
 						+ " WHERE valor = " + valor[i] + ";";
-System.out.println(valor[i]);
 				PreparedStatement stmt = conection.prepareStatement(sql);
 				stmt.executeUpdate();
 				stmt.close();
@@ -155,7 +155,6 @@ System.out.println(valor[i]);
 			for (int i = 0; i < clave.length; i++) {
 				String sql = "UPDATE `bbddmaquinarefrescos`.`dispensadores` SET cantidad = " + cantidad.get(i)
 						+ " WHERE clave = '" + clave[i] + "';";
-				System.out.println(clave[i]);
 				PreparedStatement stmt = conection.prepareStatement(sql);
 				stmt.executeUpdate();
 				stmt.close();

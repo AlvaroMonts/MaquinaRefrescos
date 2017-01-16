@@ -3,4 +3,4 @@ fantan,10,60,fanta naranja
 fantal,10,60,fanta limon
 spr,10,60,sprite
 rdb,10,80,redbull
-mns,10,90,monster
+mns,10,90,mons
