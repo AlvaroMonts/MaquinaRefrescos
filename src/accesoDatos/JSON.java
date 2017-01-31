@@ -41,8 +41,7 @@ public class JSON implements Datos {
 			String url = "http://localhost/PHPEjercicios/MaquinaBackend/JsonJavascript/requestDep.php";
 			String response = encargadoPeticiones.getRequest(url);
 			JSONParser parser = new JSONParser();
-			JSONArray array;
-			array = (JSONArray) parser.parse(response);
+			JSONArray array = (JSONArray) parser.parse(response);
 			JSONObject obj;
 			for (int i = 0; i < array.size(); i++) {
 				obj = (JSONObject) array.get(i);
