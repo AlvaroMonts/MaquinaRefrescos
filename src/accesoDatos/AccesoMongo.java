@@ -56,21 +56,22 @@ public class AccesoMongo implements Datos {
 			int numDocumentos = (int) collection.count();
 			System.out.println("Número de documentos (registros) en la colección depositos: " + numDocumentos + "\n");
 
-			// Recorro todos los documentos de la coleccion (tabla), creo el objeto
+			// Recorro todos los documentos de la coleccion (tabla), creo el
+			// objeto
 			// deposito y lo almaceno en el hashmap
 			MongoCursor<Document> cursor = collection.find().iterator();
 
 			while (cursor.hasNext()) {
 				Document rs = cursor.next();
 				nombreMoneda = rs.getString("nombre");
-				valor = Integer.parseInt(rs.getString("valor"));
-				cantidad = Integer.parseInt(rs.getString("cantidad"));
+				valor = rs.getInteger("valor");
+				cantidad = rs.getInteger("cantidad");
 				nuevoDep = new Deposito(nombreMoneda, valor, cantidad);
 				// Una vez creado el deposito con valor de la moneda y cantidad
 				// lo metemos en el hashmap
 				depositosCreados.put(valor, nuevoDep);
 
-				//System.out.println(cursor.next().toString());
+				// System.out.println(cursor.next().toString());
 			}
 		} catch (Exception ex) {
 			System.out.println("Error leyendo la coleccion: no se ha podido acceder a los datos");
@@ -83,7 +84,7 @@ public class AccesoMongo implements Datos {
 		System.out.println("Leidos datos de la coleccion de Depositos");
 		return depositosCreados;
 	}
-	
+
 	@Override
 	public HashMap<String, Dispensador> obtenerDispensadores() {
 		HashMap<String, Dispensador> dispensadoresCreados = new HashMap<String, Dispensador>();
@@ -102,7 +103,8 @@ public class AccesoMongo implements Datos {
 			// PASO 4.2.1: "READ" -> Leemos todos los documentos de la base de
 			// datos
 			int numDocumentos = (int) collection.count();
-			System.out.println("Número de documentos (registros) en la colección dispensadores: " + numDocumentos + "\n");
+			System.out
+					.println("Número de documentos (registros) en la colección dispensadores: " + numDocumentos + "\n");
 
 			// Busco todos los documentos de la colección, creo el objeto
 			// deposito y lo almaceno en el hashmap
@@ -112,13 +114,13 @@ public class AccesoMongo implements Datos {
 				Document rs = cursor.next();
 				nombre = rs.getString("nombre");
 				clave = rs.getString("clave");
-				precio = (int) Math.floor(rs.getDouble("precio"));
-				cantidad = (int) Math.floor(rs.getDouble("cantidad"));
-				nuevoDis = new Dispensador(clave,nombre, precio, cantidad);
+				precio = rs.getInteger("precio");
+				cantidad = rs.getInteger("cantidad");
+				nuevoDis = new Dispensador(clave, nombre, precio, cantidad);
 				// Una vez creado el dispensador lo metemos en el hashmap
 				dispensadoresCreados.put(clave, nuevoDis);
 
-				//System.out.println(cursor.next().toString());
+				// System.out.println(cursor.next().toString());
 			}
 		} catch (Exception ex) {
 			System.out.println("Error leyendo la coleccion: no se ha podido acceder a los datos");
@@ -134,28 +136,23 @@ public class AccesoMongo implements Datos {
 	@Override
 	public boolean guardarDepositos(HashMap<Integer, Deposito> depositos) {
 		boolean todoOK = false;
-		
+
 		todoOK = this.guardarDepv1(depositos);
 
 		return todoOK;
-		
+
 	}
 
-	//Actualizamos borrando la colleccion y volviendo a escribir
+	// Actualizamos borrando la colleccion y volviendo a escribir
 	private boolean guardarDepv1(HashMap<Integer, Deposito> depositos) {
 		boolean todoOK = true;
-		
+
 		try {
 			Deposito auxDep;
-			collection = db.getCollection("depositos");
-			collection.drop();
-			// Para que salga ordenado el hashmap de monedas (de stackoverflow)
-			SortedSet<Integer> keys = new TreeSet<Integer>(depositos.keySet());
-			for (int key : keys) {
-				auxDep = (Deposito) depositos.get(key);
-				
-				collection.insertOne(depToDocument(auxDep));
-
+			this.collection = db.getCollection("depositos");
+			for (HashMap.Entry<Integer, Deposito> entry : depositos.entrySet()) {
+				auxDep = (Deposito) entry.getValue();
+				collection.updateOne(new Document("valor", auxDep.getValor()), new Document("$set", depToDocument(auxDep)));
 			}
 		} catch (Exception e) {
 			todoOK = false;
@@ -164,44 +161,40 @@ public class AccesoMongo implements Datos {
 		}
 
 		return todoOK;
-		
-	}	
-	
-	
-	private Document depToDocument(Deposito auxDep) {
-	    // Creamos una instancia Documento
-	    Document dbObjectDeposito = new Document();
-	    
-	    dbObjectDeposito.append("id", auxDep.getId());
-	    dbObjectDeposito.append("nombre", auxDep.getNombreMoneda());
-	    dbObjectDeposito.append("valor", auxDep.getValor());
-	    dbObjectDeposito.append("cantidad", auxDep.getCantidad());
 
-	    return dbObjectDeposito;
 	}
 
+	private Document depToDocument(Deposito auxDep) {
+		// Creamos una instancia Documento
+		Document dbObjectDeposito = new Document();
 
-	
+		dbObjectDeposito.append("id", auxDep.getId());
+		dbObjectDeposito.append("nombre",auxDep.getNombreMoneda());
+		dbObjectDeposito.append("valor", auxDep.getValor());
+		dbObjectDeposito.append("cantidad", auxDep.getCantidad());
+		return dbObjectDeposito;
+	}
+
 	@Override
 	public boolean guardarDispensadores(HashMap<String, Dispensador> dispensadores) {
 		boolean todoOK = false;
-		
+
 		todoOK = this.guardarDisv1(dispensadores);
 
 		return todoOK;
 	}
-	
-	//Actualizamos borrando la colleccion y volviendo a escribir
+
+	// Actualizamos borrando la colleccion y volviendo a escribir
 	private boolean guardarDisv1(HashMap<String, Dispensador> dispensadores) {
 		boolean todoOK = true;
-		
+
 		try {
 			Dispensador auxDis;
-			collection = db.getCollection("dispensadores");
-			collection.drop();			
+			this.collection = db.getCollection("dispensadores");
 			for (HashMap.Entry<String, Dispensador> entry : dispensadores.entrySet()) {
 				auxDis = (Dispensador) entry.getValue();
-				collection.insertOne(disToDocument(auxDis));
+
+				collection.updateOne(new Document("clave", auxDis.getClave()), new Document("$set", disToDocument(auxDis)));
 			}
 		} catch (Exception e) {
 			todoOK = false;
@@ -210,20 +203,20 @@ public class AccesoMongo implements Datos {
 		}
 
 		return todoOK;
-		
-	}	
-	
-	private Document disToDocument(Dispensador auxDis) {
-	    // Creamos una instancia Documento
-	    Document dbObjectDeposito = new Document();
-	    
-	    dbObjectDeposito.append("id", auxDis.getId());
-	    dbObjectDeposito.append("clave", auxDis.getClave());
-	    dbObjectDeposito.append("nombre", auxDis.getNombreProducto());
-	    dbObjectDeposito.append("precio", auxDis.getPrecio());
-	    dbObjectDeposito.append("cantidad", auxDis.getCantidad());
 
-	    return dbObjectDeposito;
+	}
+
+	private Document disToDocument(Dispensador auxDis) {
+		// Creamos una instancia Documento
+		Document dbObjectDispensador = new Document();
+
+		dbObjectDispensador.append("id", auxDis.getId());
+		dbObjectDispensador.append("clave", auxDis.getClave());
+		dbObjectDispensador.append("nombre", auxDis.getNombreProducto());
+		dbObjectDispensador.append("precio", auxDis.getPrecio());
+		dbObjectDispensador.append("cantidad", auxDis.getCantidad());
+
+		return dbObjectDispensador;
 	}
 
 }
